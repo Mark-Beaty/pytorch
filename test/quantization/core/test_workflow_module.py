@@ -1154,7 +1154,7 @@ class TestFusedObsFakeQuantModule(TestCase):
             torch.testing.assert_allclose(mod.state_dict()['activation_post_process.max_val'], running_max_op)
 
     def test_fused_mod_reduce_range(self):
-        obs = FusedMovingAvgObsFakeQuantize(quant_min=0, quant_max=255, dtype=torch.quint8, reduce_range=True)
+        obs = FusedMovingAvgObsFakeQuantize(quant_min=0, quant_max=127, dtype=torch.quint8, reduce_range=True)
 
         self.assertEqual(obs.quant_min, 0)
         self.assertEqual(obs.quant_max, 127)
@@ -1273,7 +1273,7 @@ class TestFusedObsFakeQuantModule(TestCase):
 
             if qengine == "fbgemm":
                 self.assertEqual(ref_model.quant.activation_post_process.quant_min, 0)
-                self.assertEqual(ref_model.quant.activation_post_process.quant_max, 127)
+                self.assertEqual(ref_model.quant.activation_post_process.quant_max, 255)
                 self.assertEqual(type(ref_model.module.linear.weight_fake_quant.activation_post_process),
                                  MovingAveragePerChannelMinMaxObserver)
             else:
